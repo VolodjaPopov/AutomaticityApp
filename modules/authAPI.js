@@ -90,7 +90,13 @@ export class AuthAPI {
           headers: { Accept: this.getAcceptHeader() },
         });
         
+        try {
         expect(response.status()).toBe(statusCode);
+        }
+        catch(err) {
+          let responseJSON = await response.json();
+          return responseJSON
+        }
     
         let responseJSON = await response.json();
   

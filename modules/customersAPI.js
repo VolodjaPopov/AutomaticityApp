@@ -264,7 +264,6 @@ export class CustomersAPI {
          break;
       }
     }   
-    
     return responseJSON;     
   }
 

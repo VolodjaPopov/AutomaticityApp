@@ -3,31 +3,17 @@ import { test } from "../fixtures/basePage.js";
 import { URLS } from "../fixtures/urls.js";
 import { ERROR_MESSAGES } from "../fixtures/messages.js";
 import { INVALID_USER_CREDENTIALS, VALID_USER_CREDENTIALS } from "../fixtures/credentials.js";
-import { CustomersAPI } from "../modules/customersAPI.js";
 
 test.describe("Register UI tests", () => {
 
-  let userID;
-  let bearerToken;
-  let page;
-  let customersAPI;
   let response;
   let positive;
-
-  test.beforeAll("Make page", async({ browser }) => {
-    page = await browser.newPage();
-    customersAPI = new CustomersAPI(page);
-  });
-
-  test.afterAll("Delete new users", async ({}) => {
-    await page.close();
-  })
 
   test.beforeEach("Visit the register page", async ({ page }) => {
     await page.goto(URLS["REGISTER_PAGE"]);
   });
 
-  test.afterEach("Delete any accidentally added new users", async ({}) => {
+  test.afterEach("Delete any accidentally added new users", async ({ customersAPI }) => {
     if(positive != undefined) {
       await customersAPI.delete({ userID: response.user.id, token: response.auth.token });
     } else {

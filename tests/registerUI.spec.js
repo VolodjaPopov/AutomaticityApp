@@ -111,7 +111,7 @@ test.describe("Register UI tests", () => {
   });
 
   test("Attempt to register an aleady registered user", { tag: "@regression" }, async ({ authUI }) => {
-    await authUI.register({ username: VALID_USER_CREDENTIALS["VALID_USERNAME"], email: VALID_USER_CREDENTIALS["VALID_EMAIL"], password: VALID_USER_CREDENTIALS["VALID_PASSWORD"], message: ERROR_MESSAGES["USER_ALREADY_EXISTS"], valid: false });
+    await authUI.register({ username: VALID_USER_CREDENTIALS["VALID_USERNAME"], email: VALID_USER_CREDENTIALS["VALID_EMAIL"], password: VALID_USER_CREDENTIALS["VALID_PASSWORD"], err1: ERROR_MESSAGES["TAKEN_USERNAME"], err2: ERROR_MESSAGES["TAKEN_EMAIL"], valid: false });
   });
 
   test("Register", { tag: "@smoke" }, async ({ authUI }) => {

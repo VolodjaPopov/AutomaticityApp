@@ -313,8 +313,12 @@ test.describe("Register UI tests", () => {
     }
   );
 
-  test("Register", { tag: "@smoke" }, async ({ authUI }) => {
-    response = await authUI.register({});
-    positive = true;
-  });
+  test(
+    "Successful register of new user",
+    { tag: "@smoke" },
+    async ({ authUI }) => {
+      response = await authUI.register({});
+      positive = true;
+    }
+  );
 });

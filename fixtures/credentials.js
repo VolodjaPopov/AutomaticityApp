@@ -6,9 +6,9 @@ import {
 } from "../generalFunctions/functions.js";
 
 const VALID_USER_CREDENTIALS = {
-  VALID_ID: 37,
-  VALID_USERNAME: "Vol",
-  VALID_EMAIL: "VolPopov@gmail.com",
+  VALID_ID: 393,
+  VALID_USERNAME: "volodja",
+  VALID_EMAIL: "vpopov@test.com",
   VALID_PASSWORD: "pass123",
 };
 

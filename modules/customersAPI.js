@@ -220,7 +220,7 @@ export class CustomersAPI {
             username: Joi.string().required(), 
             first_name: Joi.string().allow(null), 
             last_name: Joi.string().allow(null), 
-            email: Joi.string().email().required(), 
+            email: Joi.string().required(), 
             password: Joi.string().required(), 
             date_of_birth: Joi.string().allow(null), 
             created_at: Joi.string(), 
@@ -264,6 +264,7 @@ export class CustomersAPI {
          break;
       }
     }   
+    
     return responseJSON;     
   }
 

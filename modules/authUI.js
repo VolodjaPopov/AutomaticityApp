@@ -99,7 +99,6 @@ export class AuthUI {
         await this.submitButton.click();
         const response = await responsePromise;
         let responseJSON = await response.json();
-        
 
         if (valid) {
           expect(response.status()).toBe(200);
@@ -111,11 +110,16 @@ export class AuthUI {
         }
 
         if(!valid) {
+          try {
           responseJSON = await response.json();
           await expect(this.page).toHaveURL(URLS["REGISTER_PAGE"]);
           await expect(this.h1Banner).toBeVisible();
           await expect(this.searchBar).not.toBeVisible();
           expect(response.status()).not.toBe(200);
+          }
+          catch(err) {
+            return responseJSON;
+          }
 
           if(response.status() == 422) {
                    

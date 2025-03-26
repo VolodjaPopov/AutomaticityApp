@@ -9,22 +9,18 @@ const { username1, email1, password1 } = generateUserCredentials(5);
 export class AuthUI {
     constructor(page) {
         this.page = page;
-        this.username = page.locator('#username');
-        this.email = page.locator('#email');
-        this.password = page.locator('#password');
-        this.submitButton = page.locator('button');
-        this.h1Banner = page.locator('h1');
-        this.loginErrorMessage = page.locator('p');
-        this.headerBeforeLogin = page.locator(
-          "div[class='max-w-full sticky z-20 top-0 overscroll-none']"
-        );
-        this.headerAfterLogin = page.locator(
-          "div[class='flex w-32 h-12 align-items-center']"
-        );
-        this.button = this.headerAfterLogin.locator('button');
+        this.username = page.locator("#username");
+        this.email = page.locator("#email");
+        this.password = page.locator("#password");
+        this.submitButton = page.locator("button");
+        this.h1Banner = page.locator("h1");
+        this.loginErrorMessage = page.locator("p");
+        this.headerBeforeLogin = page.locator(".text-m");
+        this.headerAfterLogin = page.locator(".max-w-full");
+        this.button = this.headerAfterLogin.locator("button");
         this.cartButton = this.button.nth(0);
         this.logoutButton = this.button.nth(1);
-        this.logoutDropdown = page.locator("div[class='rounded-md ring-1 ring-black ring-opacity-5 py-1 bg-white']");
+        this.logoutDropdown = page.locator(".ring-opacity-5");
         this.logoutDropdownButton = this.logoutDropdown.locator("button");
         this.searchBar = page.locator("#search");
       }
@@ -33,7 +29,7 @@ export class AuthUI {
         email = VALID_USER_CREDENTIALS["VALID_EMAIL"], 
         password = VALID_USER_CREDENTIALS["VALID_PASSWORD"], 
         message,  
-        valid = false, 
+        valid = true, 
       }) {
         expect(this.headerBeforeLogin).toBeVisible();
         expect(this.h1Banner).toBeVisible();
@@ -47,17 +43,16 @@ export class AuthUI {
         await this.submitButton.click();
         const response = await responsePromise;
 
-        if (valid == true) {     
+        if (valid) {     
         expect(response.status()).toBe(200);  
         await expect(this.page).toHaveURL(URLS["DASHBOARD"]);
-        await expect(this.headerAfterLogin).toBeVisible();
-        await expect(this.cartButton).toBeEnabled();
-        await expect(this.logoutButton).toBeEnabled();
-        await expect(this.searchBar).toBeVisible();
-        await expect(this.page).toHaveScreenshot();
+        let token = await this.page.evaluate(() => {
+          return localStorage.getItem("token");
+         });
+        expect(token).not.toBe(null);
         }
 
-        if(valid == false) {     
+        if(!valid) {     
           expect(response.status()).not.toBe(200);
           let responseJSON = await response.json();   
           await expect(this.page).toHaveURL(URLS["LOGIN_PAGE"]);
@@ -74,8 +69,7 @@ export class AuthUI {
               await expect(this.loginErrorMessage.nth(0)).toContainText(ERROR_MESSAGES["EMAIL_MISSING"]);
               await expect(this.loginErrorMessage.nth(1)).toBeVisible();
               await expect(this.loginErrorMessage.nth(1)).toContainText(ERROR_MESSAGES["PASSWORD_MISSING"]);
-            }
-            else {
+            } else {
               await expect(this.loginErrorMessage).toBeVisible();
               await expect(this.loginErrorMessage).toContainText(message);
             }
@@ -88,7 +82,9 @@ export class AuthUI {
         email = email1, 
         password = password1, 
         message, 
-        valid = false, 
+        valid = true, 
+        err1, 
+        err2, 
       }) {
         expect(this.h1Banner).toBeVisible();
         expect(this.h1Banner).toContainText("Register!");
@@ -105,16 +101,16 @@ export class AuthUI {
         let responseJSON = await response.json();
         
 
-        if (valid == true) {
+        if (valid) {
           expect(response.status()).toBe(200);
           await expect(this.page).toHaveURL(URLS["DASHBOARD"]);
-          await expect(this.cartButton).toBeEnabled();
-          await expect(this.logoutButton).toBeEnabled();
-          await expect(this.searchBar).toBeVisible();
-          await expect(this.page).toHaveScreenshot();
+          let token = await this.page.evaluate(() => {
+            return localStorage.getItem("token");
+           });
+          expect(token).not.toBe(null);
         }
 
-        if(valid == false) {
+        if(!valid) {
           responseJSON = await response.json();
           await expect(this.page).toHaveURL(URLS["REGISTER_PAGE"]);
           await expect(this.h1Banner).toBeVisible();
@@ -133,7 +129,9 @@ export class AuthUI {
           }
           if(Object.keys(responseJSON.errors).length == 2 ) {
             expect(this.loginErrorMessage.nth(0)).toBeVisible();
+            expect(this.loginErrorMessage.nth(0)).toContainText(err1);
             expect(this.loginErrorMessage.nth(1)).toBeVisible();
+            expect(this.loginErrorMessage.nth(1)).toContainText(err2);
           }
 
           if(Object.keys(responseJSON.errors).length == 1 ) {
@@ -151,7 +149,14 @@ export class AuthUI {
         await this.logoutButton.click();
         expect(this.logoutDropdown).toBeVisible();
         expect(this.logoutDropdownButton).toBeVisible();
+        const responsePromise = this.page.waitForResponse("/");
         await this.logoutDropdownButton.click();
+        const response = await responsePromise;
+        expect(response.status()).toBe(200);
         await expect(this.page).toHaveURL("/");
+        let token = await this.page.evaluate(() => {
+          return localStorage.getItem("token");
+         });
+        expect(token).toBe(null);
       };
 }

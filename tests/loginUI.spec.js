@@ -53,7 +53,7 @@ test.describe("Login UI tests", () => {
     await authUI.login({ email: INVALID_USER_CREDENTIALS["VALID_MAIL_BUT_NOT_REGISTERED"], error: ERROR_MESSAGES["UNAUTHORIZED"], valid: false });
   });
 
-  test("Log in", { tag: "@smoke" }, async ({ authUI, page }) => {
+  test("Log in", { tag: "@smoke" }, async ({ authUI }) => {
     await authUI.login({});
   });
 

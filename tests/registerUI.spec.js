@@ -94,8 +94,8 @@ test.describe("Register UI tests", () => {
     await authUI.register({ email: INVALID_USER_CREDENTIALS["MAIL_WITH_DOT_COM_IN_THE_MIDDLE"], message: ERROR_MESSAGES["INVALID_MAIL_FORMAT_FOR_REGISTER"], valid: false });
   });
 
-  test("Attempt to register with an email that has a single chatacter followed by many empty spaces", { tag: "@regression" }, async ({ authUI }) => {
-    await authUI.register({ email: INVALID_USER_CREDENTIALS["MAIL_WITH_EMPTY_SPACES_AFTER_FIRST_CHARACTER"], message: ERROR_MESSAGES["INVALID_MAIL_FORMAT_FOR_REGISTER"], valid: false });
+  test("Attempt to register with an email that has a few chatacter followed by many empty spaces", { tag: "@regression" }, async ({ authUI }) => {
+    await authUI.register({ email: INVALID_USER_CREDENTIALS["MAIL_WITH_EMPTY_SPACES_AFTER_FIRST_CHARACTERS"], message: ERROR_MESSAGES["INVALID_MAIL_FORMAT_FOR_REGISTER"], valid: false });
   });
 
   test("Attempt to register user with an already registered mail", { tag: "@regression" }, async ({ authUI }) => {

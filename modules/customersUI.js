@@ -1,4 +1,5 @@
 import { expect } from "@playwright/test";
+import { VALID_USER_CREDENTIALS } from "../fixtures/credentials";
 
 export class CustomersUI {
   constructor(page) {
@@ -11,7 +12,11 @@ export class CustomersUI {
     this.button = this.headerAfterLogin.locator("button");
     this.cartButton = this.button.nth(0);
     this.logoutButton = this.button.nth(1);
+    this.cartUpperWindow = page.locator("section").nth(0);
+    this.clearAllItemsFromCartButton = this.cartUpperWindow.locator("button");
     this.cardWindowContents = page.locator("section").nth(1);
+    this.itemInCart = this.cardWindowContents.locator("div");
+    this.removeItemButton = this.itemInCart.locator("button").nth(0);
   }
 
   async addProductToCart({ valid = true, userID, productID = 1 }) {
@@ -34,5 +39,35 @@ export class CustomersUI {
     await this.cartButton.click();
     await expect(this.cardWindowContents).toBeVisible();
     await expect(this.cardWindowContents).toContainText(text);
+  }
+
+  async removeAllProductsFromCart({
+    valid = true,
+    userID = VALID_USER_CREDENTIALS["VALID_ID"],
+  }) {
+    await expect(this.cartButton).toBeVisible();
+    await this.cartButton.click();
+    await expect(this.cartUpperWindow).toBeVisible();
+    await expect(this.clearAllItemsFromCartButton).toBeVisible();
+    const responsePromise = this.page.waitForResponse(`/api/v1/cart/${userID}`);
+    await this.clearAllItemsFromCartButton.click();
+    const response = await responsePromise;
+    expect(response.status()).toBe(200);
+  }
+
+  async removeSingleProductFromCart({
+    userID = VALID_USER_CREDENTIALS["VALID_ID"],
+  }) {
+    const item = this.itemInCart.nth(0);
+    const deleteButton = item.locator("button").nth(0);
+    await expect(this.cartButton).toBeVisible();
+    await this.cartButton.click();
+    await expect(this.cardWindowContents).toBeVisible();
+    await expect(item).toBeVisible();
+    await expect(deleteButton).toBeVisible();
+    const responsePromise = this.page.waitForResponse(`/api/v1/cart/${userID}`);
+    await deleteButton.click();
+    const response = await responsePromise;
+    expect(response.status()).toBe(200);
   }
 }

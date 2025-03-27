@@ -35,11 +35,34 @@ test.describe("Dasboard tests", () => {
     let userID = await page.evaluate(() => {
       return localStorage.getItem("userId");
     });
-    await customersUI.addProductToCart({ userID: userID, productID: 23 });
+    await customersUI.addProductToCart({ userID: userID, productID: 12 });
   });
 
-  test("Generic test", { tag: "@smoke" }, async ({}) => {
+  test("Remove all products from cart", { tag: "@smoke" }, async ({}) => {
     await page.goto(URLS["DASHBOARD"]);
     await expect(page).toHaveURL(URLS["DASHBOARD"]);
+    const spinner = page.locator(
+      "div:nth-child(24) > .h-screen > .absolute > .h-48 > .text-white"
+    );
+    await spinner.waitFor();
+    await page.waitForSelector(
+      "div:nth-child(24) > .h-screen > .absolute > .h-48 > .text-white",
+      { state: "hidden" }
+    );
+    await customersUI.removeAllProductsFromCart({});
+  });
+
+  test("Delete a single item from cart", { tag: "@smoke" }, async ({}) => {
+    await page.goto(URLS["DASHBOARD"]);
+    await expect(page).toHaveURL(URLS["DASHBOARD"]);
+    const spinner = page.locator(
+      "div:nth-child(24) > .h-screen > .absolute > .h-48 > .text-white"
+    );
+    await spinner.waitFor();
+    await page.waitForSelector(
+      "div:nth-child(24) > .h-screen > .absolute > .h-48 > .text-white",
+      { state: "hidden" }
+    );
+    await customersUI.removeSingleProductFromCart({});
   });
 });

@@ -15,6 +15,11 @@ export class CustomersUI {
   }
 
   async addProductToCart({ valid = true, userID, productID = 1 }) {
+    await expect(this.product).toHaveCount(24);
+    for (const prod of await this.product.all()) {
+      await expect(prod).toBeVisible();
+    }
+
     await expect(this.product.nth(productID - 1)).toBeVisible();
     const text = await this.productName.nth(productID - 1).textContent();
     await expect(this.addProductToCartButton.nth(productID - 1)).toBeEnabled();

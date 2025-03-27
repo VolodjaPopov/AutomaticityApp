@@ -35,7 +35,7 @@ test.describe("Dasboard tests", () => {
     let userID = await page.evaluate(() => {
       return localStorage.getItem("userId");
     });
-    await customersUI.addProductToCart({ userID: userID, productID: 5 });
+    await customersUI.addProductToCart({ userID: userID, productID: 23 });
   });
 
   test("Generic test", { tag: "@smoke" }, async ({}) => {

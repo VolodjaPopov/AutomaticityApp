@@ -80,7 +80,6 @@ export class CustomersAPI {
 
     expect(response.status()).toBe(statusCode);
     let responseJSON = await response.json();
-    console.log(responseJSON);
 
     if (statusCode == 200) {
       const schema = Joi.object({

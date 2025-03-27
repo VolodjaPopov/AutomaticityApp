@@ -15,20 +15,19 @@ export class CustomersUI {
   }
 
   async addProductToCart({ valid = true, userID, productID = 1 }) {
-    await expect(this.firstProduct).toBeVisible();
-    await expect(this.addProductToCartButton.nth(0)).toBeEnabled();
+    await expect(this.product.nth(productID - 1)).toBeVisible();
+    const text = await this.productName.nth(productID - 1).textContent();
+    await expect(this.addProductToCartButton.nth(productID - 1)).toBeEnabled();
     const responsePromise = this.page.waitForResponse(
       `/api/v1/cart/${userID}/products/${productID}`
     );
-    await this.addProductToCartButton.nth(0).click();
+    await this.addProductToCartButton.nth(productID - 1).click();
     const response = await responsePromise;
     const responseJSON = await response.json();
     expect(response.status()).toBe(200);
     console.log(responseJSON);
     await this.cartButton.click();
     await expect(this.cardWindowContents).toBeVisible();
-    await expect(this.cardWindowContents).toContainText(
-      "NVIDIA GeForce RTX 3080 Ti"
-    );
+    await expect(this.cardWindowContents).toContainText(text);
   }
 }

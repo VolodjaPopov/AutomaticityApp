@@ -13,7 +13,7 @@ test.describe("Dasboard tests", () => {
     page = await browser.newPage();
     authUI = new AuthUI(page);
     customersUI = new CustomersUI(page);
-    await page.goto(URLS.LOGIN_PAGE);
+    await page.goto(URLS["LOGIN_PAGE"]);
     await authUI.login({ valid: true });
   });
 
@@ -22,12 +22,24 @@ test.describe("Dasboard tests", () => {
   });
 
   test("Add a product to cart", { tag: "@smoke" }, async ({}) => {
-    await expect(page).toHaveURL(URLS.DASHBOARD);
-    await customersUI.addProductToCart({ userID: 393 });
+    await page.goto(URLS["DASHBOARD"]);
+    await expect(page).toHaveURL(URLS["DASHBOARD"]);
+    const spinner = page.locator(
+      "div:nth-child(24) > .h-screen > .absolute > .h-48 > .text-white"
+    );
+    await spinner.waitFor();
+    await page.waitForSelector(
+      "div:nth-child(24) > .h-screen > .absolute > .h-48 > .text-white",
+      { state: "hidden" }
+    );
+    let userID = await page.evaluate(() => {
+      return localStorage.getItem("userId");
+    });
+    await customersUI.addProductToCart({ userID: userID, productID: 20 });
   });
 
   test("Generic test", { tag: "@smoke" }, async ({}) => {
     await page.goto(URLS["DASHBOARD"]);
-    await expect(page).toHaveURL(URLS.DASHBOARD);
+    await expect(page).toHaveURL(URLS["DASHBOARD"]);
   });
 });

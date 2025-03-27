@@ -6,3 +6,6 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 .env
+tests/UI/loginAndRegisterVisual.spec.js-snapshots/Visual-login-tests-Register-a-new-user-1-chromium-linux.png
+tests/UI/loginAndRegisterVisual.spec.js-snapshots/Login-Page-chromium-linux.png
+tests/UI/loginAndRegisterVisual.spec.js-snapshots/Dashboard-Page-chromium-linux.png

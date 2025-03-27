@@ -1,8 +1,8 @@
 import { expect } from "@playwright/test";
-import { test } from "../fixtures/basePage.js";
-import { CustomersUI } from "../modules/customersUI.js";
-import { AuthUI } from "../modules/authUI.js";
-import { URLS } from "../fixtures/urls.js";
+import { test } from "../../fixtures/basePage.js";
+import { CustomersUI } from "../../modules/customersUI.js";
+import { AuthUI } from "../../modules/authUI.js";
+import { URLS } from "../../fixtures/urls.js";
 
 test.describe("Dasboard tests", () => {
   let page;
@@ -23,7 +23,7 @@ test.describe("Dasboard tests", () => {
 
   test("Add a product to cart", { tag: "@smoke" }, async ({}) => {
     await expect(page).toHaveURL(URLS.DASHBOARD);
-    await customersUI.addProductToCart({});
+    await customersUI.addProductToCart({ userID: 393 });
   });
 
   test("Generic test", { tag: "@smoke" }, async ({}) => {

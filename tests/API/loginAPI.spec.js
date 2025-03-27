@@ -1,6 +1,6 @@
-import { test } from "../fixtures/basePage.js";
-import { INVALID_USER_CREDENTIALS } from "../fixtures/credentials.js";
-import { ERROR_MESSAGES } from "../fixtures/messages.js";
+import { test } from "../../fixtures/basePage.js";
+import { INVALID_USER_CREDENTIALS } from "../../fixtures/credentials.js";
+import { ERROR_MESSAGES } from "../../fixtures/messages.js";
 
 test.describe("Login API tests", () => {
   test(

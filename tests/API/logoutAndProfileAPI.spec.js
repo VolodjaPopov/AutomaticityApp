@@ -1,9 +1,9 @@
-import { test } from "../fixtures/basePage.js";
+import { test } from "../../fixtures/basePage.js";
 import {
   INVALID_USER_CREDENTIALS,
   VALID_USER_CREDENTIALS,
-} from "../fixtures/credentials.js";
-import { ERROR_MESSAGES } from "../fixtures/messages.js";
+} from "../../fixtures/credentials.js";
+import { ERROR_MESSAGES } from "../../fixtures/messages.js";
 
 test.describe("Logout and profile checking tests", () => {
   let bearerToken;

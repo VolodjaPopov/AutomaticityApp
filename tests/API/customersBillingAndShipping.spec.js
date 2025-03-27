@@ -1,13 +1,13 @@
-import { test } from "../fixtures/basePage.js";
+import { test } from "../../fixtures/basePage.js";
 import {
   INVALID_BILLING_INFO,
   INVALID_ID,
   INVALID_USER_CREDENTIALS,
   VALID_BILLING_INFO,
   VALID_SHIPPING_INFO,
-} from "../fixtures/credentials.js";
-import { ERROR_MESSAGES } from "../fixtures/messages.js";
-import { noID } from "../generalFunctions/functions.js";
+} from "../../fixtures/credentials.js";
+import { ERROR_MESSAGES } from "../../fixtures/messages.js";
+import { noID } from "../../generalFunctions/functions.js";
 
 test.describe("Customer API tests regarding billing and shipping info", () => {
   let bearerToken;

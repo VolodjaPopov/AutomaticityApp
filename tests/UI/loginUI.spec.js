@@ -1,7 +1,7 @@
-import { test } from "../fixtures/basePage.js";
-import { URLS } from "../fixtures/urls.js";
-import { ERROR_MESSAGES } from "../fixtures/messages.js";
-import { INVALID_USER_CREDENTIALS } from "../fixtures/credentials.js";
+import { test } from "../../fixtures/basePage.js";
+import { URLS } from "../../fixtures/urls.js";
+import { ERROR_MESSAGES } from "../../fixtures/messages.js";
+import { INVALID_USER_CREDENTIALS } from "../../fixtures/credentials.js";
 
 test.describe("Login UI tests", () => {
   test.beforeEach("Visit the login page", async ({ page }) => {

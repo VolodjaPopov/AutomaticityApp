@@ -1,11 +1,11 @@
 import { expect } from "@playwright/test";
-import { test } from "../fixtures/basePage.js";
-import { URLS } from "../fixtures/urls.js";
-import { ERROR_MESSAGES } from "../fixtures/messages.js";
+import { test } from "../../fixtures/basePage.js";
+import { URLS } from "../../fixtures/urls.js";
+import { ERROR_MESSAGES } from "../../fixtures/messages.js";
 import {
   INVALID_USER_CREDENTIALS,
   VALID_USER_CREDENTIALS,
-} from "../fixtures/credentials.js";
+} from "../../fixtures/credentials.js";
 
 test.describe("Register UI tests", () => {
   let response;

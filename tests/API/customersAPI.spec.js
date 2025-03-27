@@ -1,11 +1,11 @@
-import { test } from "../fixtures/basePage.js";
+import { test } from "../../fixtures/basePage.js";
 import {
   INVALID_ID,
   INVALID_USER_CREDENTIALS,
   VALID_USER_CREDENTIALS,
-} from "../fixtures/credentials.js";
-import { ERROR_MESSAGES } from "../fixtures/messages.js";
-import { noID } from "../generalFunctions/functions.js";
+} from "../../fixtures/credentials.js";
+import { ERROR_MESSAGES } from "../../fixtures/messages.js";
+import { noID } from "../../generalFunctions/functions.js";
 
 test.describe("Customer API tests", () => {
   let bearerToken;

@@ -14,11 +14,11 @@ export class CustomersUI {
     this.cardWindowContents = page.locator("section").nth(1);
   }
 
-  async addProductToCart({ valid = true }) {
+  async addProductToCart({ valid = true, userID, productID = 1 }) {
     await expect(this.firstProduct).toBeVisible();
     await expect(this.addProductToCartButton.nth(0)).toBeEnabled();
     const responsePromise = this.page.waitForResponse(
-      "/api/v1/cart/393/products/1"
+      `/api/v1/cart/${userID}/products/${productID}`
     );
     await this.addProductToCartButton.nth(0).click();
     const response = await responsePromise;

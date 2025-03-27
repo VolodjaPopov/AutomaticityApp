@@ -19,7 +19,11 @@ export class CustomersUI {
     this.removeItemButton = this.itemInCart.locator("button").nth(0);
   }
 
-  async addProductToCart({ valid = true, userID, productID = 1 }) {
+  async addProductToCart({
+    valid = true,
+    userID = VALID_USER_CREDENTIALS["VALID_ID"],
+    productID = 1,
+  }) {
     await expect(this.product).toHaveCount(24);
     for (const prod of await this.product.all()) {
       await expect(prod).toBeVisible();

@@ -1,5 +1,6 @@
 import { expect } from "@playwright/test";
 import { VALID_USER_CREDENTIALS } from "../fixtures/credentials";
+import { URLS } from "../fixtures/urls";
 
 export class CustomersUI {
   constructor(page) {
@@ -17,6 +18,12 @@ export class CustomersUI {
     this.cardWindowContents = page.locator("section").nth(1);
     this.itemInCart = this.cardWindowContents.locator("div");
     this.removeItemButton = this.itemInCart.locator("button").nth(0);
+    this.filters = page.locator(".p-ripple");
+    this.filterMenu = page.locator("ul").first();
+    this.selectFiltersButton = this.filterMenu.locator("button").first();
+    this.disselectFiltersButton = this.filterMenu.locator("button").last();
+    this.searchBar = page.locator("#search");
+    this.spinner = page.locator(".h-screen > .absolute > .h-48").last();
   }
 
   async addProductToCart({
@@ -49,6 +56,10 @@ export class CustomersUI {
     valid = true,
     userID = VALID_USER_CREDENTIALS["VALID_ID"],
   }) {
+    await expect(this.product).toHaveCount(24);
+    for (const prod of await this.product.all()) {
+      await expect(prod).toBeVisible();
+    }
     await expect(this.cartButton).toBeVisible();
     await this.cartButton.click();
     await expect(this.cartUpperWindow).toBeVisible();
@@ -57,6 +68,9 @@ export class CustomersUI {
     await this.clearAllItemsFromCartButton.click();
     const response = await responsePromise;
     expect(response.status()).toBe(200);
+    await expect(this.cardWindowContents).toContainText(
+      "No items in cart. Add some!"
+    );
   }
 
   async removeSingleProductFromCart({
@@ -73,5 +87,30 @@ export class CustomersUI {
     await deleteButton.click();
     const response = await responsePromise;
     expect(response.status()).toBe(200);
+  }
+
+  async apllyFilters({}) {
+    await this.page.goto(URLS["DASHBOARD"]);
+    await expect(this.product).toHaveCount(24);
+    for (const prod of await this.product.all()) {
+      await expect(prod).toBeVisible();
+    }
+    await expect(this.filters.nth(2)).toBeVisible();
+    await this.filters.nth(1).click();
+    await this.filters.nth(2).click();
+    await this.selectFiltersButton.click();
+
+    await expect(this.spinner).toBeVisible();
+  }
+
+  async searchForItem({ item }) {
+    await this.searchBar.fill(item);
+    await expect(this.spinner).toBeVisible();
+    await expect(this.spinner).not.toBeVisible();
+    for (const prod of await this.product.all()) {
+      await expect(prod.locator("h1")).toContainText(item, {
+        ignoreCase: true,
+      });
+    }
   }
 }

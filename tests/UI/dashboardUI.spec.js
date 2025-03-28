@@ -24,7 +24,7 @@ test.describe("Dasboard tests", () => {
   test("Add a product to cart", { tag: "@smoke" }, async ({}) => {
     await page.goto(URLS["DASHBOARD"]);
     await expect(page).toHaveURL(URLS["DASHBOARD"]);
-    await customersUI.addProductToCart({ productID: 23 });
+    await customersUI.addProductToCart({ productID: 8 });
   });
 
   test("Remove all products from cart", { tag: "@smoke" }, async ({}) => {
@@ -37,5 +37,13 @@ test.describe("Dasboard tests", () => {
     await page.goto(URLS["DASHBOARD"]);
     await expect(page).toHaveURL(URLS["DASHBOARD"]);
     await customersUI.removeSingleProductFromCart({});
+  });
+
+  test("Aplly filters", { tag: "@smoke" }, async ({}) => {
+    await customersUI.apllyFilters({});
+  });
+
+  test("Search for an item", { tag: "@smoke" }, async ({}) => {
+    await customersUI.searchForItem({ item: "apple" });
   });
 });

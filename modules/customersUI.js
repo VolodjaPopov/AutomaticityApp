@@ -17,8 +17,8 @@ export class CustomersUI {
     this.logoutButton = this.button.nth(1);
     this.cartUpperWindow = page.locator("section").nth(0);
     this.clearAllItemsFromCartButton = this.cartUpperWindow.locator("button");
-    this.cardWindowContents = page.locator("section").nth(1);
-    this.itemInCart = this.cardWindowContents.locator("div");
+    this.cartWindowContents = page.locator("section").nth(1);
+    this.itemInCart = this.cartWindowContents.locator("div");
     this.removeItemButton = this.itemInCart.locator("button").nth(0);
     this.filters = page.locator(".p-ripple");
     this.filterMenu = page.locator("ul").first();
@@ -26,6 +26,13 @@ export class CustomersUI {
     this.disselectFiltersButton = this.filterMenu.locator("button").last();
     this.searchBar = page.locator("#search");
     this.spinner = page.locator(".h-screen > .absolute > .h-48").last();
+    this.pageSwitchDiv = page.locator(".paginated");
+    this.pageSwitchButton = this.pageSwitchDiv.locator("button");
+    this.priceSliderStart = page.locator(".p-slider-handle-start");
+    this.priceSliderEnd = page.locator(".p-slider-handle-end");
+    this.priceSliderTrack = page.locator(".p-slider-range");
+    this.priceFilterLi = page.locator(".pt-4 > div").nth(1);
+    this.priceText = this.priceFilterLi.locator("span").nth(1);
   }
 
   async addProductToCart({
@@ -52,8 +59,8 @@ export class CustomersUI {
     expect(response.status()).toBe(200);
     console.log(responseJSON);
     await this.cartButton.click();
-    await expect(this.cardWindowContents).toBeVisible();
-    await expect(this.cardWindowContents).toContainText(text);
+    await expect(this.cartWindowContents).toBeVisible();
+    await expect(this.cartWindowContents).toContainText(text);
   }
 
   async removeAllProductsFromCart({
@@ -74,7 +81,7 @@ export class CustomersUI {
     await this.clearAllItemsFromCartButton.click();
     const response = await responsePromise;
     expect(response.status()).toBe(200);
-    await expect(this.cardWindowContents).toContainText(
+    await expect(this.cartWindowContents).toContainText(
       "No items in cart. Add some!"
     );
   }
@@ -94,14 +101,14 @@ export class CustomersUI {
     const deleteButton = item.locator("button").nth(0);
     await expect(this.cartButton).toBeVisible();
     await this.cartButton.click();
-    await expect(this.cardWindowContents).toBeVisible();
+    await expect(this.cartWindowContents).toBeVisible();
     await expect(item).toBeVisible();
     await expect(deleteButton).toBeVisible();
     const responsePromise = this.page.waitForResponse(`/api/v1/cart/${userID}`);
     await deleteButton.click();
     const response = await responsePromise;
     expect(response.status()).toBe(200);
-    await expect(this.cardWindowContents).not.toContainText(itemName);
+    await expect(this.cartWindowContents).not.toContainText(itemName);
   }
 
   async apllyFilters({
@@ -172,6 +179,33 @@ export class CustomersUI {
       }
     }
     expect(prodCount).toEqual(filterCount);
+  }
+
+  async applyPriceFilter({}) {
+    await this.page.goto(URLS["DASHBOARD"]);
+    await expect(this.product).toHaveCount(24);
+    for (const prod of await this.product.all()) {
+      await expect(prod).toBeVisible();
+    }
+    await expect(this.priceFilterLi).toBeVisible();
+    await expect(this.priceText).toBeVisible();
+
+    await this.priceSliderEnd.dragTo(this.priceSliderStart, {
+      targetPosition: { x: 60, y: 30 },
+      force: true,
+    });
+    await expect(this.priceText).toContainText("€");
+    const price = await this.priceText.textContent();
+    const priceInt = Number(price.slice(0, -1));
+    await this.selectFiltersButton.click();
+    await expect(this.spinner).toBeVisible();
+    await this.spinner.waitFor({ state: "hidden" });
+    for (const prod of await this.product.all()) {
+      const pricePerItem = await prod.locator("span").nth(1);
+      const pricePerItemText = await pricePerItem.textContent();
+      const pricePerItemInt = Number(pricePerItemText.slice(0, -1));
+      expect(pricePerItemInt).toBeLessThanOrEqual(priceInt);
+    }
   }
 
   async searchForItem({ item }) {

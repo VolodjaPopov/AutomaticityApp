@@ -33,6 +33,8 @@ export class CustomersUI {
     userID = VALID_USER_CREDENTIALS["VALID_ID"],
     productID = 1,
   }) {
+    await this.page.goto(URLS["DASHBOARD"]);
+    await expect(this.page).toHaveURL(URLS["DASHBOARD"]);
     await expect(this.product).toHaveCount(24);
     for (const prod of await this.product.all()) {
       await expect(prod).toBeVisible();
@@ -58,6 +60,8 @@ export class CustomersUI {
     valid = true,
     userID = VALID_USER_CREDENTIALS["VALID_ID"],
   }) {
+    await this.page.goto(URLS["DASHBOARD"]);
+    await expect(this.page).toHaveURL(URLS["DASHBOARD"]);
     await expect(this.product).toHaveCount(24);
     for (const prod of await this.product.all()) {
       await expect(prod).toBeVisible();
@@ -78,7 +82,15 @@ export class CustomersUI {
   async removeSingleProductFromCart({
     userID = VALID_USER_CREDENTIALS["VALID_ID"],
   }) {
+    await this.page.goto(URLS["DASHBOARD"]);
+    await expect(this.page).toHaveURL(URLS["DASHBOARD"]);
+    await expect(this.product).toHaveCount(24);
+    for (const prod of await this.product.all()) {
+      await expect(prod).toBeVisible();
+    }
     const item = this.itemInCart.nth(0);
+    const itemName = await item.locator(".my-1").textContent();
+
     const deleteButton = item.locator("button").nth(0);
     await expect(this.cartButton).toBeVisible();
     await this.cartButton.click();
@@ -89,6 +101,7 @@ export class CustomersUI {
     await deleteButton.click();
     const response = await responsePromise;
     expect(response.status()).toBe(200);
+    await expect(this.cardWindowContents).not.toContainText(itemName);
   }
 
   async apllyFilters({
@@ -162,6 +175,8 @@ export class CustomersUI {
   }
 
   async searchForItem({ item }) {
+    await this.page.goto(URLS["DASHBOARD"]);
+    await expect(this.page).toHaveURL(URLS["DASHBOARD"]);
     await this.searchBar.fill(item);
     await expect(this.spinner).toBeVisible();
     await expect(this.spinner).not.toBeVisible();

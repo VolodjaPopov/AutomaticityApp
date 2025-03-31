@@ -22,28 +22,26 @@ test.describe("Dasboard tests", () => {
   });
 
   test("Add a product to cart", { tag: "@smoke" }, async ({}) => {
-    await page.goto(URLS["DASHBOARD"]);
-    await expect(page).toHaveURL(URLS["DASHBOARD"]);
-    await customersUI.addProductToCart({ productID: 14 });
+    await customersUI.addProductToCart({ productID: 7 });
   });
 
   test("Remove all products from cart", { tag: "@smoke" }, async ({}) => {
-    await page.goto(URLS["DASHBOARD"]);
-    await expect(page).toHaveURL(URLS["DASHBOARD"]);
     await customersUI.removeAllProductsFromCart({});
   });
 
-  test("Delete a single item from cart", { tag: "@smoke" }, async ({}) => {
-    await page.goto(URLS["DASHBOARD"]);
-    await expect(page).toHaveURL(URLS["DASHBOARD"]);
-    await customersUI.removeSingleProductFromCart({});
+  test(
+    "Remove a single product from cart (first product)",
+    { tag: "@smoke" },
+    async ({}) => {
+      await customersUI.removeSingleProductFromCart({});
+    }
+  );
+
+  test("Aplly filters", { tag: "@sanity" }, async ({}) => {
+    await customersUI.apllyFilters({ three: true, four: true });
   });
 
-  test("Aplly filters", { tag: "@smoke" }, async ({}) => {
-    await customersUI.apllyFilters({ one: true, three: true });
-  });
-
-  test("Search for an item", { tag: "@smoke" }, async ({}) => {
+  test("Search for a product", { tag: "@sanity" }, async ({}) => {
     await customersUI.searchForItem({ item: "apple" });
   });
 });

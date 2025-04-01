@@ -15,13 +15,11 @@ export class AuthUI {
     this.submitButton = page.locator("button");
     this.h1Banner = page.locator("h1");
     this.loginErrorMessage = page.locator("p");
-    this.headerBeforeLogin = page.locator(".text-m");
-    this.headerAfterLogin = page.locator(".max-w-full");
-    this.button = this.headerAfterLogin.locator("button");
+    this.header = page.locator("#app > div > div").first();
+    this.button = this.header.locator("button");
     this.cartButton = this.button.nth(0);
     this.logoutButton = this.button.nth(1);
-    this.logoutDropdown = page.locator(".ring-opacity-5");
-    this.logoutDropdownButton = this.logoutDropdown.locator("button");
+    this.logoutDropdownButton = this.button.nth(2);
     this.searchBar = page.locator("#search");
   }
 
@@ -31,7 +29,7 @@ export class AuthUI {
     message,
     valid = true,
   }) {
-    expect(this.headerBeforeLogin).toBeVisible();
+    expect(this.header).toBeVisible();
     expect(this.h1Banner).toBeVisible();
     expect(this.h1Banner).toContainText("Welcome Back! 👋🏻");
     expect(this.email).toBeEditable();
@@ -158,10 +156,9 @@ export class AuthUI {
   }
 
   async logout({}) {
-    await expect(this.headerAfterLogin).toBeVisible();
+    await expect(this.header).toBeVisible();
     expect(this.logoutButton).toBeEnabled();
     await this.logoutButton.click();
-    expect(this.logoutDropdown).toBeVisible();
     expect(this.logoutDropdownButton).toBeVisible();
     const responsePromise = this.page.waitForResponse("/");
     await this.logoutDropdownButton.click();

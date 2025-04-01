@@ -38,12 +38,11 @@ export class CustomersUI {
     await expect(this.product.nth(productID - 1)).toBeVisible();
     const text = await this.productName.nth(productID - 1).textContent();
     await expect(this.addProductToCartButton.nth(productID - 1)).toBeEnabled();
-    const responsePromise = this.page.waitForResponse(
+    const productIdLoad = this.page.waitForResponse(
       `/api/v1/cart/${userID}/products/${productID}`
     );
     await this.addProductToCartButton.nth(productID - 1).click();
-    const response = await responsePromise;
-    const responseJSON = await response.json();
+    const response = await productIdLoad;
     expect(response.status()).toBe(200);
     await this.cartButton.click();
     await expect(this.cartWindowContents).toBeVisible();
@@ -51,16 +50,15 @@ export class CustomersUI {
   }
 
   async removeAllProductsFromCart({
-    valid = true,
     userID = VALID_USER_CREDENTIALS["VALID_ID"],
   }) {
     await expect(this.cartButton).toBeVisible();
     await this.cartButton.click();
     await expect(this.cartUpperWindow).toBeVisible();
     await expect(this.clearAllItemsFromCartButton).toBeVisible();
-    const responsePromise = this.page.waitForResponse(`/api/v1/cart/${userID}`);
+    const cartIDLoad = this.page.waitForResponse(`/api/v1/cart/${userID}`);
     await this.clearAllItemsFromCartButton.click();
-    const response = await responsePromise;
+    const response = await cartIDLoad;
     expect(response.status()).toBe(200);
     await expect(this.cartWindowContents).toContainText(
       "No items in cart. Add some!"
@@ -79,9 +77,9 @@ export class CustomersUI {
     await expect(this.cartWindowContents).toBeVisible();
     await expect(item).toBeVisible();
     await expect(deleteButton).toBeVisible();
-    const responsePromise = this.page.waitForResponse(`/api/v1/cart/${userID}`);
+    const cartIDLoad = this.page.waitForResponse(`/api/v1/cart/${userID}`);
     await deleteButton.click();
-    const response = await responsePromise;
+    const response = await cartIDLoad;
     expect(response.status()).toBe(200);
     await expect(this.cartWindowContents).not.toContainText(itemName);
   }

@@ -114,6 +114,11 @@ export class CustomersUI {
     ];
     let applied = [];
 
+    // This 'for' checks to see if any filters have been set
+    // to true, in which case it clicks the corresponding locator
+    // on the page and adds the image of the products with that filter
+    // to the 'applied' array.
+
     for (let i = 0; i < filtersArr.length; i++) {
       if (filtersArr[i]) {
         await expect(this.filters.nth(i)).toBeVisible();

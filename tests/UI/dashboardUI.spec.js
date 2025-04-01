@@ -17,12 +17,25 @@ test.describe("Dasboard tests", () => {
     await authUI.login({ valid: true });
   });
 
+  test.beforeEach(
+    "Visit the dashboard page and wait for all products to load",
+    async ({}) => {
+      await page.goto(URLS["DASHBOARD"]);
+      await expect(page).toHaveURL(URLS["DASHBOARD"]);
+      await expect(customersUI.spinner).toBeVisible();
+      await customersUI.spinner.waitFor({ state: "hidden" });
+      for (const prod of await customersUI.product.all()) {
+        await expect(prod).toBeVisible();
+      }
+    }
+  );
+
   test.afterAll("Close page", async ({}) => {
     await page.close();
   });
 
   test("Add a product to cart", { tag: "@smoke" }, async ({}) => {
-    await customersUI.addProductToCart({ productID: 9 });
+    await customersUI.addProductToCart({ productID: 13 });
   });
 
   test("Remove all products from cart", { tag: "@smoke" }, async ({}) => {
@@ -38,7 +51,10 @@ test.describe("Dasboard tests", () => {
   );
 
   test("Aplly filters", { tag: "@sanity" }, async ({}) => {
-    await customersUI.apllyFilters({ three: true, four: true });
+    await customersUI.apllyFilters({
+      gpus_1: true,
+      cpus_2: true,
+    });
   });
 
   test("Search for a product", { tag: "@sanity" }, async ({}) => {

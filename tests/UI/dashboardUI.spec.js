@@ -35,7 +35,7 @@ test.describe("Dasboard tests", () => {
   });
 
   test("Add a product to cart", { tag: "@smoke" }, async ({}) => {
-    await customersUI.addProductToCart({ productID: 13 });
+    await customersUI.addProductToCart({ productID: 20 });
   });
 
   test("Remove all products from cart", { tag: "@smoke" }, async ({}) => {

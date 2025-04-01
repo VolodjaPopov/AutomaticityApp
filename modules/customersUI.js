@@ -1,6 +1,5 @@
 import { expect } from "@playwright/test";
 import { VALID_USER_CREDENTIALS } from "../fixtures/credentials.js";
-import { URLS } from "../fixtures/urls.js";
 import { PRODUCT_IMAGE } from "../fixtures/images.js";
 
 export class CustomersUI {
@@ -25,7 +24,7 @@ export class CustomersUI {
     this.selectFiltersButton = this.filterMenu.locator("button").first();
     this.disselectFiltersButton = this.filterMenu.locator("button").last();
     this.searchBar = page.locator("#search");
-    this.spinner = page.locator(".h-screen > .absolute > .h-48").last();
+    this.spinner = page.locator("svg[viewBox='0 0 100 101']").last();
     this.priceSliderStart = page.locator("span[role='slider']").first();
     this.priceSliderEnd = page.locator("span[role='slider']").last();
     this.priceFilterLi = page.locator("li >> nth=-1 >> div").nth(1);
@@ -33,7 +32,6 @@ export class CustomersUI {
   }
 
   async addProductToCart({
-    valid = true,
     userID = VALID_USER_CREDENTIALS["VALID_ID"],
     productID = 1,
   }) {

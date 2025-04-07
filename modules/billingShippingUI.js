@@ -34,6 +34,10 @@ export class BillingShippingUI {
     cardholder = VALID_BILLING_INFO["CARDHOLDER"],
     card_number = VALID_BILLING_INFO["CARD_NUMBER"],
     cvv = VALID_BILLING_INFO["CVV"],
+    monthValue = "03",
+    yearValue = "2027",
+    expiration_month = `li[aria-label='${monthValue}']`,
+    expiration_year = `li[aria-label='${yearValue}']`,
     valid = true,
   }) {
     if (
@@ -54,10 +58,10 @@ export class BillingShippingUI {
     await this.cvvInput.fill(cvv);
     await expect(this.expirationMonthDropdown).toBeVisible();
     await this.expirationMonthDropdown.click();
-    await this.page.locator("li[aria-label='03']").click();
+    await this.page.locator(expiration_month).click();
     await expect(this.expirationYearDropdown).toBeVisible();
     await this.expirationYearDropdown.click();
-    await this.page.locator("li[aria-label='2027']").click();
+    await this.page.locator(expiration_year).click();
     const succesfulBillingInfoUpdateResponse = this.page.waitForResponse(
       `/api/v1/customers/${userID}/billing-info`
     );

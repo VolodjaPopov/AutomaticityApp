@@ -167,6 +167,51 @@ test.describe("Tests regarding updating the billing and shipping info of the cus
   );
 
   test(
+    "Attempt to update billing info with with a CVV shorter than 3 characters",
+    { tag: "@regression" },
+    async ({}) => {
+      await billingShippingUI.updateBillingInfo({
+        valid: false,
+        cvv: INVALID_BILLING_INFO["SHORT_CVV"],
+      });
+    }
+  );
+
+  test(
+    "Attempt to update billing info with with a CVV longer than 3 characters",
+    { tag: "@regression" },
+    async ({}) => {
+      await billingShippingUI.updateBillingInfo({
+        valid: false,
+        cvv: INVALID_BILLING_INFO["LONG_CARD_NUMBER"],
+      });
+    }
+  );
+
+  test(
+    "Attempt to update billing info with with a string CVV",
+    { tag: "@regression" },
+    async ({}) => {
+      await billingShippingUI.updateBillingInfo({
+        valid: false,
+        cvv: INVALID_BILLING_INFO["CVV_STRING"],
+      });
+    }
+  );
+
+  test(
+    "Attempt to update billing info with expired card",
+    { tag: "@regression" },
+    async ({}) => {
+      await billingShippingUI.updateBillingInfo({
+        valid: false,
+        monthValue: "01",
+        yearValue: "2025",
+      });
+    }
+  );
+
+  test(
     "Update billing info with valid credentials",
     { tag: "@smoke" },
     async ({}) => {

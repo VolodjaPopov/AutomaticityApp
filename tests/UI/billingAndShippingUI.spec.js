@@ -5,6 +5,8 @@ import { URLS } from "../../fixtures/urls.js";
 import { BillingShippingUI } from "../../modules/billingShippingUI.js";
 import {
   INVALID_BILLING_INFO,
+  INVALID_USER_CREDENTIALS,
+  VALID_BILLING_INFO,
   VALID_USER_CREDENTIALS,
 } from "../../fixtures/credentials.js";
 
@@ -12,6 +14,7 @@ test.describe("Tests regarding updating the billing and shipping info of the cus
   let page;
   let authUI;
   let billingShippingUI;
+  let userID = VALID_USER_CREDENTIALS["VALID_ID"];
 
   test.beforeAll("Log in", async ({ browser }) => {
     page = await browser.newPage();
@@ -26,16 +29,18 @@ test.describe("Tests regarding updating the billing and shipping info of the cus
     // info responses to load, otherwise the test goes too fast and innacurate
     // results are recieved.
 
+    const billingResponsePromise = page.waitForResponse(
+      `/api/v1/customers/${userID}/billing-info`
+    );
+    const shippingResponsePromise = page.waitForResponse(
+      `/api/v1/customers/${userID}/shipping-info`
+    );
     await page.goto(URLS["PROFILE"]);
     await expect(page).toHaveURL(URLS["PROFILE"]);
     await expect(billingShippingUI.billingForm).toBeVisible();
     await expect(billingShippingUI.shippingForm).toBeVisible();
-    const billingResponse = await page.request.get(
-      `/api/v1/customers/${VALID_USER_CREDENTIALS["VALID_ID"]}/billing-info`
-    );
-    const shippingResponse = await page.request.get(
-      `/api/v1/customers/${VALID_USER_CREDENTIALS["VALID_ID"]}/shipping-info`
-    );
+    const billingResponse = await billingResponsePromise;
+    const shippingResponse = await shippingResponsePromise;
     expect(billingResponse.status()).toBe(200);
     expect(shippingResponse.status()).toBe(200);
   });
@@ -212,10 +217,102 @@ test.describe("Tests regarding updating the billing and shipping info of the cus
   );
 
   test(
+    "Attempt to update shipping info with empty strings in every field",
+    { tag: "@regression" },
+    async ({}) => {
+      await billingShippingUI.updateShippingInfo({
+        first_name: "",
+        last_name: "",
+        email: "",
+        phone_number: "",
+        street_address: "",
+        city: "",
+        postal_code: "",
+        country: "",
+        valid: false,
+      });
+    }
+  );
+
+  test(
+    "Attempt to update first name to an integer",
+    { tag: "@regression" },
+    async ({}) => {
+      await billingShippingUI.updateShippingInfo({
+        first_name: INVALID_BILLING_INFO["CARDHOLDER_STRING_OF_NUMBERS"],
+        valid: false,
+      });
+    }
+  );
+
+  test(
+    "Attempt to update last name to an integer",
+    { tag: "@regression" },
+    async ({}) => {
+      await billingShippingUI.updateShippingInfo({
+        last_name: INVALID_BILLING_INFO["CARDHOLDER_STRING_OF_NUMBERS"],
+        valid: false,
+      });
+    }
+  );
+
+  test(
+    "Attempt to update email to an invalid type",
+    { tag: "@regression" },
+    async ({}) => {
+      await billingShippingUI.updateShippingInfo({
+        email: INVALID_USER_CREDENTIALS["INVALID_MAIL_FORMAT"],
+        valid: false,
+      });
+    }
+  );
+
+  test(
+    "Attempt to update phone number to only 3 characters",
+    { tag: "@regression" },
+    async ({}) => {
+      await billingShippingUI.updateShippingInfo({
+        phone_number: VALID_BILLING_INFO["CVV"],
+        valid: false,
+      });
+    }
+  );
+
+  test(
+    "Attempt to update phone number to 100 characters",
+    { tag: "@regression" },
+    async ({}) => {
+      await billingShippingUI.updateShippingInfo({
+        phone_number: INVALID_BILLING_INFO["LONG_CARD_NUMBER"],
+        valid: false,
+      });
+    }
+  );
+
+  test(
+    "Attempt to update phone number string",
+    { tag: "@regression" },
+    async ({}) => {
+      await billingShippingUI.updateShippingInfo({
+        phone_number: INVALID_BILLING_INFO["TEXT_CREDIT_CARD"],
+        valid: false,
+      });
+    }
+  );
+
+  test(
     "Update billing info with valid credentials",
     { tag: "@smoke" },
     async ({}) => {
       await billingShippingUI.updateBillingInfo({});
+    }
+  );
+
+  test(
+    "Update shipping info with valid credentials",
+    { tag: "@smoke" },
+    async ({}) => {
+      await billingShippingUI.updateShippingInfo({});
     }
   );
 });

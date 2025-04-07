@@ -4,7 +4,7 @@ import { CustomersUI } from "../../modules/customersUI.js";
 import { AuthUI } from "../../modules/authUI.js";
 import { URLS } from "../../fixtures/urls.js";
 
-test.describe("Dasboard tests", () => {
+test.describe("Test regarding adding and removing products from the cart", () => {
   let page;
   let authUI;
   let customersUI;
@@ -38,7 +38,7 @@ test.describe("Dasboard tests", () => {
   });
 
   test("Add a product to cart", { tag: "@smoke" }, async ({}) => {
-    await customersUI.addProductToCart({ productID: 20 });
+    await customersUI.addProductToCart({ productID: 15 });
   });
 
   test("Remove all products from cart", { tag: "@smoke" }, async ({}) => {
@@ -52,19 +52,4 @@ test.describe("Dasboard tests", () => {
       await customersUI.removeSingleProductFromCart({});
     }
   );
-
-  test("Aplly filters", { tag: "@sanity" }, async ({}) => {
-    await customersUI.apllyFilters({
-      gpus_1: true,
-      cpus_2: true,
-    });
-  });
-
-  test("Search for a product", { tag: "@sanity" }, async ({}) => {
-    await customersUI.searchForItem({ item: "pro" });
-  });
-
-  test("Aplly filter for price", { tag: "@sanity" }, async ({}) => {
-    await customersUI.applyPriceFilter({});
-  });
 });

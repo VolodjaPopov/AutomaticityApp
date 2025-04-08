@@ -38,7 +38,7 @@ test.describe("Test regarding adding and removing products from the cart", () =>
   });
 
   test("Add a product to cart", { tag: "@smoke" }, async ({}) => {
-    await customersUI.addProductToCart({ productID: 15 });
+    await customersUI.addProductToCart({ productID: 16 });
   });
 
   test("Remove all products from cart", { tag: "@smoke" }, async ({}) => {

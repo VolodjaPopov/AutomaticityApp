@@ -21,6 +21,28 @@ export class Checkout {
     this.shippingUI;
   }
 
+  async binItemInCheckoutPage(userID = VALID_USER_CREDENTIALS["VALID_ID"]) {
+    await this.binItemButton.click();
+    const binResponse = await this.page.waitForResponse(
+      `/api/v1/cart/${userID}`
+    );
+    expect(binResponse.status()).toBe(200);
+    await expect(this.page).toHaveURL(URLS["DASHBOARD"]);
+  }
+
+  async updateShippingInCheckoutPage() {
+    this.shippingUI = new ShippingUI(this.page);
+    this.nextStepButton = this.page.locator("button[type='submit']");
+    await this.makeChangesButton.click();
+    await this.shippingUI.updateShippingInfo({ checkoutPage: true });
+  }
+
+  async updateBillingInCheckoutPage() {
+    this.billingUI = new BillingUI(this.page);
+    await this.makeChangesButton.click();
+    await this.billingUI.updateBillingInfo({ checkoutPage: true });
+  }
+
   async checkoutItem({
     userID = VALID_USER_CREDENTIALS["VALID_ID"],
     binItem = false,
@@ -37,10 +59,7 @@ export class Checkout {
     expect(checkoutResponse.status()).toBe(200);
     await expect(this.page).toHaveURL(URLS["CHECKOUT_PAGE"]);
     if (binItem) {
-      await this.binItemButton.click();
-      const binResponse = await checkoutResponsePromise;
-      expect(binResponse.status()).toBe(200);
-      await expect(this.page).toHaveURL(URLS["DASHBOARD"]);
+      await this.binItemInCheckoutPage();
     } else {
       await expect(this.nextStepButton).toBeEnabled();
       const shippingInfoResponsePromise = this.page.waitForResponse(
@@ -50,10 +69,7 @@ export class Checkout {
       const shippingResponse = await shippingInfoResponsePromise;
       expect(shippingResponse.status()).toBe(200);
       if (updateShipping) {
-        this.shippingUI = new ShippingUI(this.page);
-        this.nextStepButton = this.page.locator("button[type='submit']");
-        await this.makeChangesButton.click();
-        await this.shippingUI.updateShippingInfo({ checkoutPage: true });
+        await this.updateShippingInCheckoutPage();
       }
       await expect(this.nextStepButton).toBeEnabled();
       const billingInfoResponsePromise = this.page.waitForResponse(
@@ -63,9 +79,7 @@ export class Checkout {
       const billingResponse = await billingInfoResponsePromise;
       expect(billingResponse.status()).toBe(200);
       if (updateBilling) {
-        this.billingUI = new BillingUI(this.page);
-        await this.makeChangesButton.click();
-        await this.billingUI.updateBillingInfo({ checkoutPage: true });
+        await this.updateBillingInCheckoutPage();
       }
       await expect(this.nextStepButton).toBeEnabled();
       await this.nextStepButton.click();

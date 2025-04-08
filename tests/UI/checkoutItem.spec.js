@@ -40,7 +40,7 @@ test.describe("Tests regarding checking out an item in the card, and updating bi
     await page.close();
   });
 
-  test("Checkout item", { tag: "@sanity" }, async ({}) => {
-    await checkout.checkoutItem({ binItem: true });
+  test("Checkout item", { tag: "@smoke" }, async ({}) => {
+    await checkout.checkoutItem({ updateShipping: true, updateBilling: true });
   });
 });

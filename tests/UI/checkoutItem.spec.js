@@ -40,8 +40,6 @@ test.describe("Tests regarding checking out an item in the card, and updating bi
     await page.close();
   });
 
-  test.use({ viewport: { width: 1850, height: 966 } });
-
   test("Checkout item", { tag: "@sanity" }, async ({}) => {
     await checkout.checkoutItem({ binItem: true });
   });

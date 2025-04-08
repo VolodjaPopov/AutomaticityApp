@@ -17,7 +17,7 @@ test.describe("Tests regarding checking out an item in the card, and updating bi
     customersUI = new CustomersUI(page);
     checkout = new Checkout(page);
     await page.goto(URLS["LOGIN_PAGE"]);
-    await authUI.login({ valid: true });
+    await authUI.login({});
   });
 
   test.beforeEach(

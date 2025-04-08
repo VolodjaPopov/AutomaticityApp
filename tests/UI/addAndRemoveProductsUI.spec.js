@@ -14,7 +14,7 @@ test.describe("Test regarding adding and removing products from the cart", () =>
     authUI = new AuthUI(page);
     customersUI = new CustomersUI(page);
     await page.goto(URLS["LOGIN_PAGE"]);
-    await authUI.login({ valid: true });
+    await authUI.login({});
   });
 
   test.beforeEach(

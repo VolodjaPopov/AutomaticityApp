@@ -1,7 +1,8 @@
 import { expect } from "@playwright/test";
 import { VALID_USER_CREDENTIALS } from "../fixtures/credentials.js";
 import { URLS } from "../fixtures/urls.js";
-import { BillingShippingUI } from "./billingShippingUI.js";
+import { BillingUI } from "./billingUI.js";
+import { ShippingUI } from "./shippingUI.js";
 
 export class Checkout {
   constructor(page) {
@@ -16,7 +17,8 @@ export class Checkout {
     this.makeChangesButton = page.locator("button").nth(3);
     this.nextStepButton = page.locator("button").last();
     this.placeOrderButton = page.locator("button").nth(2);
-    this.billingShippingUI = new BillingShippingUI(page);
+    this.billingUI;
+    this.shippingUI;
   }
 
   async checkoutItem({
@@ -48,9 +50,10 @@ export class Checkout {
       const shippingResponse = await shippingInfoResponsePromise;
       expect(shippingResponse.status()).toBe(200);
       if (updateShipping) {
+        this.shippingUI = new ShippingUI(this.page);
         this.nextStepButton = this.page.locator("button[type='submit']");
         await this.makeChangesButton.click();
-        await this.billingShippingUI.updateShippingInfo({ checkoutPage: true });
+        await this.shippingUI.updateShippingInfo({ checkoutPage: true });
       }
       await expect(this.nextStepButton).toBeEnabled();
       const billingInfoResponsePromise = this.page.waitForResponse(
@@ -60,8 +63,9 @@ export class Checkout {
       const billingResponse = await billingInfoResponsePromise;
       expect(billingResponse.status()).toBe(200);
       if (updateBilling) {
+        this.billingUI = new BillingUI(this.page);
         await this.makeChangesButton.click();
-        await this.billingShippingUI.updateBillingInfo({ checkoutPage: true });
+        await this.billingUI.updateBillingInfo({ checkoutPage: true });
       }
       await expect(this.nextStepButton).toBeEnabled();
       await this.nextStepButton.click();

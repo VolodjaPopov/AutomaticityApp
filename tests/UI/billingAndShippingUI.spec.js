@@ -7,6 +7,7 @@ import {
   INVALID_BILLING_INFO,
   INVALID_USER_CREDENTIALS,
   VALID_BILLING_INFO,
+  VALID_SHIPPING_INFO,
   VALID_USER_CREDENTIALS,
 } from "../../fixtures/credentials.js";
 
@@ -25,9 +26,9 @@ test.describe("Tests regarding updating the billing and shipping info of the cus
   });
 
   test.beforeEach("Visit the profile page", async ({}) => {
-    // We go to the profile page and wait for the billing and shipping
-    // info responses to load, otherwise the test goes too fast and innacurate
-    // results are recieved.
+    /* We go to the profile page and wait for the billing and shipping
+       info responses to load, otherwise the tests go too fast and innacurate
+       results are recieved. */
 
     const billingResponsePromise = page.waitForResponse(
       `/api/v1/customers/${userID}/billing-info`
@@ -290,11 +291,99 @@ test.describe("Tests regarding updating the billing and shipping info of the cus
   );
 
   test(
-    "Attempt to update phone number string",
+    "Attempt to update phone number to string",
     { tag: "@regression" },
     async ({}) => {
       await billingShippingUI.updateShippingInfo({
         phone_number: INVALID_BILLING_INFO["TEXT_CREDIT_CARD"],
+        valid: false,
+      });
+    }
+  );
+
+  test(
+    "Attempt to update address to only an integer",
+    { tag: "@regression" },
+    async ({}) => {
+      await billingShippingUI.updateShippingInfo({
+        street_address: INVALID_BILLING_INFO["CARDHOLDER_STRING_OF_NUMBERS"],
+        valid: false,
+      });
+    }
+  );
+
+  test(
+    "Attempt to update address to string with no street number",
+    { tag: "@regression" },
+    async ({}) => {
+      await billingShippingUI.updateShippingInfo({
+        street_address: VALID_SHIPPING_INFO["CITY"],
+        valid: false,
+      });
+    }
+  );
+
+  test(
+    "Attempt to update city to integer",
+    { tag: "@regression" },
+    async ({}) => {
+      await billingShippingUI.updateShippingInfo({
+        city: INVALID_BILLING_INFO["CARDHOLDER_STRING_OF_NUMBERS"],
+        valid: false,
+      });
+    }
+  );
+
+  test(
+    "Attempt to update postal code to less than 4 characters",
+    { tag: "@regression" },
+    async ({}) => {
+      await billingShippingUI.updateShippingInfo({
+        postal_code: INVALID_BILLING_INFO["SHORT_CVV"],
+        valid: false,
+      });
+    }
+  );
+
+  test(
+    "Attempt to update postal code to more than 10 characters",
+    { tag: "@regression" },
+    async ({}) => {
+      await billingShippingUI.updateShippingInfo({
+        postal_code: VALID_BILLING_INFO["CARD_NUMBER"],
+        valid: false,
+      });
+    }
+  );
+
+  test(
+    "Attempt to update postal code to string",
+    { tag: "@regression" },
+    async ({}) => {
+      await billingShippingUI.updateShippingInfo({
+        postal_code: VALID_SHIPPING_INFO["FIRST_NAME"],
+        valid: false,
+      });
+    }
+  );
+
+  test(
+    "Attempt to update country to integer",
+    { tag: "@regression" },
+    async ({}) => {
+      await billingShippingUI.updateShippingInfo({
+        country: INVALID_BILLING_INFO["CARDHOLDER_STRING_OF_NUMBERS"],
+        valid: false,
+      });
+    }
+  );
+
+  test(
+    "Attempt to update country to only 1 character",
+    { tag: "@regression" },
+    async ({}) => {
+      await billingShippingUI.updateShippingInfo({
+        country: INVALID_BILLING_INFO["ONE_CHAR"],
         valid: false,
       });
     }

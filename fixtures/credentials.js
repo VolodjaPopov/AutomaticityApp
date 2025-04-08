@@ -57,6 +57,8 @@ const INVALID_BILLING_INFO = {
   CARDHOLDER_INT: Math.floor(generateRandomInt(10)),
   CARDHOLDER_STRING_OF_NUMBERS: generateRandomInt(10),
   CVV_STRING: generateRandomStringNoNumbers(3),
+  SHORT_CVV: generateRandomInt(2),
+  ONE_CHAR: generateRandomStringNoNumbers(1),
 };
 
 const VALID_SHIPPING_INFO = {

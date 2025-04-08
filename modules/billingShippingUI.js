@@ -39,8 +39,14 @@ export class BillingShippingUI {
     expiration_month = `li[aria-label='${monthValue}']`,
     expiration_year = `li[aria-label='${yearValue}']`,
     valid = true,
+    checkoutPage = false,
   }) {
+    if (checkoutPage) {
+      this.billingChangesButton = this.page.locator("button").nth(3);
+    }
+
     if (
+      !checkoutPage &&
       (await this.billingChangesButton.locator("span").textContent()).includes(
         "Make changes"
       )
@@ -88,8 +94,10 @@ export class BillingShippingUI {
     postal_code = VALID_SHIPPING_INFO["POSTAL_CODE"],
     country = VALID_SHIPPING_INFO["COUNTRY"],
     valid = true,
+    checkoutPage = false,
   }) {
     if (
+      !checkoutPage &&
       (await this.shippingChangesButton.locator("span").textContent()).includes(
         "Make changes"
       )

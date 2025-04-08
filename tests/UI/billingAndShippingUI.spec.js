@@ -46,6 +46,10 @@ test.describe("Tests regarding updating the billing and shipping info of the cus
     expect(shippingResponse.status()).toBe(200);
   });
 
+  test.afterAll("Close page", async ({}) => {
+    await page.close();
+  });
+
   test(
     "Attempt to update billing info with empty cardholder, number and cvv fields",
     { tag: "@regression" },

@@ -3,7 +3,8 @@ import { AuthAPI } from "../modules/authAPI.js";
 import { CustomersAPI } from "../modules/customersAPI.js";
 import { AuthUI } from "../modules/authUI.js";
 import { CustomersUI } from "../modules/customersUI.js";
-import { BillingShippingUI } from "../modules/billingShippingUI.js";
+import { BillingUI } from "../modules/billingUI.js";
+import { ShippingUI } from "../modules/shippingUI.js";
 
 export const test = baseTest.extend({
   authAPI: async ({ page }, use) => {
@@ -18,7 +19,10 @@ export const test = baseTest.extend({
   customersUI: async ({ page }, use) => {
     await use(new CustomersUI(page));
   },
-  billingShippingUI: async ({ page }, use) => {
-    await use(new BillingShippingUI(page));
+  billingUI: async ({ page }, use) => {
+    await use(new BillingUI(page));
+  },
+  shippingUI: async ({ page }, use) => {
+    await use(new ShippingUI(page));
   },
 });

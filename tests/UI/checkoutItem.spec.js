@@ -1,18 +1,21 @@
 import { expect } from "@playwright/test";
 import { test } from "../../fixtures/basePage.js";
-import { CustomersUI } from "../../modules/customersUI.js";
 import { AuthUI } from "../../modules/authUI.js";
 import { URLS } from "../../fixtures/urls.js";
+import { CustomersUI } from "../../modules/customersUI.js";
+import { Checkout } from "../../modules/checkout.js";
 
-test.describe("Test regarding adding and removing products from the cart", () => {
+test.describe("Tests regarding checking out an item in the card, and updating billing or shipping info if needed", () => {
   let page;
   let authUI;
   let customersUI;
+  let checkout;
 
   test.beforeAll("Log in", async ({ browser }) => {
     page = await browser.newPage();
     authUI = new AuthUI(page);
     customersUI = new CustomersUI(page);
+    checkout = new Checkout(page);
     await page.goto(URLS["LOGIN_PAGE"]);
     await authUI.login({});
   });
@@ -20,8 +23,8 @@ test.describe("Test regarding adding and removing products from the cart", () =>
   test.beforeEach(
     "Visit the dashboard page and wait for all products to load",
     async ({}) => {
-      // We wait for all products to load because the tests run
-      // too fast otherwise and innacurate results are recieved
+      /* We wait for all products to load because the tests run
+         too fast otherwise and innacurate results are recieved */
 
       await page.goto(URLS["DASHBOARD"]);
       await expect(page).toHaveURL(URLS["DASHBOARD"]);
@@ -37,19 +40,7 @@ test.describe("Test regarding adding and removing products from the cart", () =>
     await page.close();
   });
 
-  test("Add a product to cart", { tag: "@smoke" }, async ({}) => {
-    await customersUI.addProductToCart({ productID: 16 });
+  test("Checkout item", { tag: "@smoke" }, async ({}) => {
+    await checkout.checkoutItem({ updateShipping: true, updateBilling: true });
   });
-
-  test("Remove all products from cart", { tag: "@smoke" }, async ({}) => {
-    await customersUI.removeAllProductsFromCart({});
-  });
-
-  test(
-    "Remove a single product from cart (first product)",
-    { tag: "@smoke" },
-    async ({}) => {
-      await customersUI.removeSingleProductFromCart({});
-    }
-  );
 });

@@ -23,8 +23,8 @@ test.describe("Tests regarding checking out an item in the card, and updating bi
   test.beforeEach(
     "Visit the dashboard page and wait for all products to load",
     async ({}) => {
-      // We wait for all products to load because the tests run
-      // too fast otherwise and innacurate results are recieved
+      /* We wait for all products to load because the tests run
+         too fast otherwise and innacurate results are recieved */
 
       await page.goto(URLS["DASHBOARD"]);
       await expect(page).toHaveURL(URLS["DASHBOARD"]);

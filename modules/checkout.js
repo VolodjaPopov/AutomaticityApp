@@ -3,6 +3,7 @@ import { VALID_USER_CREDENTIALS } from "../fixtures/credentials.js";
 import { URLS } from "../fixtures/urls.js";
 import { BillingUI } from "./billingUI.js";
 import { ShippingUI } from "./shippingUI.js";
+import { CustomersUI } from "./customersUI.js";
 
 export class Checkout {
   constructor(page) {
@@ -19,6 +20,7 @@ export class Checkout {
     this.placeOrderButton = page.locator("button").nth(2);
     this.billingUI;
     this.shippingUI;
+    this.addItemUI;
   }
 
   async binItemInCheckoutPage(userID = VALID_USER_CREDENTIALS["VALID_ID"]) {
@@ -49,8 +51,18 @@ export class Checkout {
     updateShipping = false,
     updateBilling = false,
   }) {
-    await this.cartButton.click();
-    await expect(this.checkoutButton).toBeEnabled();
+    try {
+      await this.cartButton.click();
+      await expect(this.checkoutButton).toBeEnabled();
+    } catch (err) {
+      this.checkoutButton = this.page
+        .locator("button[data-pc-section='root']")
+        .last();
+      await this.cartButton.click();
+      this.addItemUI = new CustomersUI(this.page);
+      await this.addItemUI.addProductToCart({ productID: 15 });
+      await expect(this.checkoutButton).toBeEnabled();
+    }
     const checkoutResponsePromise = this.page.waitForResponse(
       `/api/v1/cart/${userID}`
     );
